@@ -40,28 +40,31 @@ export const PUZZLE = {
   export function validateBoard(board: Board, clues: Clues, size: number): Errors {
     const errors: Errors = Array.from({ length: size }, () => Array(size).fill(false));
   
+    const boardFull = board.every(row => row.every(val => val !== 0));
+  
     for (let i = 0; i < size; i++) {
       const row = board[i];
       const col = board.map(r => r[i]);
   
+      // Always check duplicates in row
       const rowNums = row.filter(n => n !== 0);
       if (new Set(rowNums).size !== rowNums.length) {
         row.forEach((_, j) => (errors[i][j] = true));
       }
   
+      // Always check duplicates in col
       const colNums = col.filter(n => n !== 0);
       if (new Set(colNums).size !== colNums.length) {
         col.forEach((_, j) => (errors[j][i] = true));
       }
   
-      if (rowNums.length === size) {
+      // Only check clues when the entire board is filled
+      if (boardFull) {
         if (clues.left[i] && countVisible(row) !== clues.left[i])
           row.forEach((_, j) => (errors[i][j] = true));
         if (clues.right[i] && countVisible([...row].reverse()) !== clues.right[i])
           row.forEach((_, j) => (errors[i][j] = true));
-      }
   
-      if (colNums.length === size) {
         if (clues.top[i] && countVisible(col) !== clues.top[i])
           col.forEach((_, j) => (errors[j][i] = true));
         if (clues.bottom[i] && countVisible([...col].reverse()) !== clues.bottom[i])

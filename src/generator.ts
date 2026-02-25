@@ -200,3 +200,52 @@ export function getHintCell(
   if (candidates.length === 0) return null;
   return candidates[Math.floor(Math.random() * candidates.length)];
 }
+
+// ─── Scores ───────────────────────────────────────────────────────────────────
+
+export type ScoreEntry = {
+    time:     number;   // in seconds
+    hints:    number;
+    mistakes: number;
+    date:     string;   // ISO string
+  };
+  
+  export type ScoreKey = string; // e.g. "4-Easy", "5-Hard"
+  
+  export function getScoreKey(size: GridSize, difficulty: Difficulty): ScoreKey {
+    return `${size}-${difficulty}`;
+  }
+  
+  export const HINT_THRESHOLDS: Record<Difficulty, number> = {
+    Easy:   2,
+    Normal: 3,
+    Hard:   4,
+  };
+  
+  const MAX_SCORES = 5;
+  
+  export function loadScores(key: ScoreKey): ScoreEntry[] {
+    try {
+      const raw = localStorage.getItem(`skyscraper-scores-${key}`);
+      return raw ? JSON.parse(raw) : [];
+    } catch {
+      return [];
+    }
+  }
+  
+  export function saveScore(key: ScoreKey, entry: ScoreEntry): { saved: boolean; rank: number } {
+    const scores = loadScores(key);
+    scores.push(entry);
+    scores.sort((a, b) => a.time - b.time);
+    const rank = scores.findIndex(s => s === entry);
+    const trimmed = scores.slice(0, MAX_SCORES);
+    const saved = trimmed.includes(entry);
+    if (saved) localStorage.setItem(`skyscraper-scores-${key}`, JSON.stringify(trimmed));
+    return { saved, rank: saved ? rank + 1 : -1 };
+  }
+  
+  export function formatTime(seconds: number): string {
+    const m = Math.floor(seconds / 60).toString().padStart(2, "0");
+    const s = (seconds % 60).toString().padStart(2, "0");
+    return `${m}:${s}`;
+  }

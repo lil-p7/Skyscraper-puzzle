@@ -1,6 +1,39 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
+.animate-cell-pop   { animation: cell-pop   0.25s ease forwards; }
+.animate-cell-shake { animation: cell-shake 0.35s ease forwards; }
+.animate-hint-pop   { animation: hint-pop   0.3s ease forwards;  }
+.animate-win-pop    { animation: win-pop    0.35s ease forwards;  }
 
- 
+@keyframes cell-pop {
+  0%   { transform: scale(1); }
+  40%  { transform: scale(1.15); }
+  70%  { transform: scale(0.95); }
+  100% { transform: scale(1); }
+}
+
+@keyframes cell-shake {
+  0%   { transform: translateX(0); }
+  20%  { transform: translateX(-5px); }
+  40%  { transform: translateX(5px); }
+  60%  { transform: translateX(-4px); }
+  80%  { transform: translateX(4px); }
+  100% { transform: translateX(0); }
+}
+
+@keyframes hint-pop {
+  0%   { transform: scale(0.5); opacity: 0; }
+  60%  { transform: scale(1.2); opacity: 1; }
+  100% { transform: scale(1);   opacity: 1; }
+}
+
+@keyframes win-pop {
+  0%   { transform: scale(1); }
+  50%  { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
+
+@keyframes fly-plane {
+  0%   { left: -60px; }
+  100% { left: 110%;  }
+}

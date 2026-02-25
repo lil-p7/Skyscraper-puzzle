@@ -11,7 +11,7 @@ export type Clues = {
 };
 
 export type Difficulty = "Easy" | "Normal" | "Hard";
-export type GridSize = 4 | 5;
+export type GridSize = 4 | 5 | 6;
 
 export type Puzzle = {
   size: GridSize;
@@ -219,7 +219,7 @@ export type ScoreEntry = {
   export const HINT_THRESHOLDS: Record<Difficulty, number> = {
     Easy:   2,
     Normal: 3,
-    Hard:   4,
+    Hard:   5,
   };
   
   const MAX_SCORES = 5;
